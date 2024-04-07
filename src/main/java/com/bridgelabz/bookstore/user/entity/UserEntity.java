@@ -1,11 +1,14 @@
 package com.bridgelabz.bookstore.user.entity;
 
 
+import com.bridgelabz.bookstore.cart.entity.CartEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
+import java.util.List;
 
 
 @Entity
@@ -13,13 +16,13 @@ import lombok.*;
 @NoArgsConstructor
 @Setter
 @Getter
-@ToString
+
 @Table(name = "userDetails")
 public class UserEntity {
     @Valid
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long userId;
+    private int userId;
     @NotNull(message = "First name should not be null")
     @NotBlank(message = "name should not be blank")
     @Size(min = 2, max = 150, message = "First name must be between 2 and 150 characters")
@@ -39,5 +42,8 @@ public class UserEntity {
     private Boolean userVerified;
     @OneToOne(mappedBy = "userEntity")
     private ForgetPassword forgetPassword;
+    @OneToMany(mappedBy = "userEntity")
+    @JsonIgnore
+    private List<CartEntity> cartEntity;
 
 }

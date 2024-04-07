@@ -7,10 +7,12 @@ import com.bridgelabz.bookstore.user.dto.NewPasswordDTO;
 import com.bridgelabz.bookstore.user.entity.UserEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.HashMap;
+
 public interface IUserReg {
 
-    void userRegistration(UserEntity userEntity);
-    String userLogin(UserLoginDTO userLoginDto);
+    HashMap<String, String> userRegistration(UserEntity userEntity);
+    HashMap<String, String> userLogin(UserLoginDTO userLoginDto);
 
     UserEntity getUser(String token);
     String forgetPassword(@RequestBody String email);

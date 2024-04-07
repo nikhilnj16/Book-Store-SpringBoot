@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.Instant;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Random;
 
 
@@ -39,21 +40,24 @@ public class UserRegImpl implements IUserReg {
     private ForgetPasswordRepository forgetPasswordRepository;
 
     @Override
-    public void userRegistration(UserEntity userEntity){
+    public HashMap<String, String> userRegistration(UserEntity userEntity){
         String encodePassword = passwordEncoder.encode(userEntity.getUserPassword());
         userEntity.setUserPassword(encodePassword);
         userEntity.setUserVerified(false);
         repo.save(userEntity);
         System.out.println(userEntity);
-        String body = "Thanks for registering in Book store application. Please verify your account" ;
-        String subject = "registered successfully and get your account verified";
-        System.out.println(userEntity.getUserEmailId());
-        emailSender.sendEmail(userEntity.getUserEmailId(), subject ,body);
+//        String body = "Thanks for registering in Book store application. Please verify your account" ;
+//        String subject = "registered successfully and get your account verified";
+//        System.out.println(userEntity.getUserEmailId());
+//        emailSender.sendEmail(userEntity.getUserEmailId(), subject ,body);
 
+        HashMap<String, String> response = new HashMap<>();
+        response.put("Status" , "OK");
+        return response;
     }
 
     @Override
-    public String userLogin(UserLoginDTO userLoginDto){
+    public HashMap<String, String> userLogin(UserLoginDTO userLoginDto){
 //        String encodePassword = passwordEncoder.encode(userLoginDto.getUserPassword());
 //        System.out.println(encodePassword);
 
@@ -68,10 +72,13 @@ public class UserRegImpl implements IUserReg {
                 userEntity.setUserVerified(true);
                 repo.save(userEntity);
             }
-            return "Login successful .Your JWT Token: " + token;
+            HashMap<String, String> response = new HashMap<>();
+            response.put("Status" , "OK");
+            response.put("token", token);
+            return response;
 
         } else {
-            return "Invalid credentials";
+            return null;
         }
     }
 

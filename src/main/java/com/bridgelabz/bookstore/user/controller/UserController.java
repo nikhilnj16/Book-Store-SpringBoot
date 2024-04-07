@@ -15,8 +15,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+
 @RestController
-@RequestMapping("/user")
+@CrossOrigin
+@RequestMapping()
 public class UserController {
     @Autowired
     private IUserReg service;
@@ -28,13 +31,13 @@ public class UserController {
     EmailSender emailSender;
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<String> userRegistration(@Valid @RequestBody UserEntity userEntity){
-        service.userRegistration(userEntity);
-        return new ResponseEntity<>("User registered successfully!", HttpStatus.OK);
+    public HashMap<String, String> userRegistration(@Valid @RequestBody UserEntity userEntity){
+        return service.userRegistration(userEntity);
+
     }
 
-    @PostMapping("/login")
-    public String userLogin(@Valid @RequestBody UserLoginDTO userLoginDto){
+    @PostMapping("user/login")
+    public HashMap<String, String> userLogin(@Valid @RequestBody UserLoginDTO userLoginDto){
         return service.userLogin(userLoginDto);
     }
 
