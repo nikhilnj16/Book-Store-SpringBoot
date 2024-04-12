@@ -2,11 +2,14 @@ package com.bridgelabz.bookstore.cart.entity;
 
 import com.bridgelabz.bookstore.book.entity.BookEntity;
 import com.bridgelabz.bookstore.cart.dto.CartDTO;
+import com.bridgelabz.bookstore.order.entity.OrderEntity;
 import com.bridgelabz.bookstore.user.entity.UserEntity;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.apache.catalina.User;
+
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -24,12 +27,15 @@ public class CartEntity {
     @JoinColumn(name = "user_id")
     private UserEntity userEntity;
 
+
     @ManyToOne
     @JoinColumn(name = "book_id")
     private BookEntity bookEntity;
 
     private int cartQuantity;
     private int cartTotalPrice;
+
+
 
     public CartEntity(UserEntity userEntity , BookEntity bookEntity, int cartTotalPrice, CartDTO cartDto) {
         this.userEntity = userEntity;

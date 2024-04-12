@@ -15,15 +15,16 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/order")
 public class OrderController {
 
     @Autowired
     private IOrderService orderService;
 
-    @PostMapping("/placeOrder/{userId}")
-    public ResponseEntity<ResponseDTO> placeOrder(@PathVariable int userId, @RequestBody OrderDTO orderDTO){
-        OrderEntity orderEntity = orderService.placeOrder(userId, orderDTO);
+    @PostMapping("/placeOrder/{jwt}")
+    public ResponseEntity<ResponseDTO> placeOrder(@PathVariable String jwt, @RequestBody OrderDTO orderDTO){
+        OrderEntity orderEntity = orderService.placeOrder(jwt, orderDTO);
         ResponseDTO responseDTO = new ResponseDTO("Order Placed", orderEntity.getOrderId());
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }

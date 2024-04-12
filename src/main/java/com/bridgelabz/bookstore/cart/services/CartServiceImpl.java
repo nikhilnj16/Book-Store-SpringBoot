@@ -10,14 +10,10 @@ import com.bridgelabz.bookstore.cart.utility.CartValidator;
 import com.bridgelabz.bookstore.user.entity.UserEntity;
 import com.bridgelabz.bookstore.user.repository.IUserRepository;
 import com.bridgelabz.bookstore.user.utility.UserJwt;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CartServiceImpl implements ICartService{
@@ -92,7 +88,7 @@ public class CartServiceImpl implements ICartService{
 
         if(cartEntity != null && userEntity != null){
             if(bookEntity !=null){
-                cartEntity.setBookEntity(bookEntity);
+//                cartEntity.setBookEntity(bookEntity);
                 cartEntity.setCartQuantity(cartDTO.getQuantity());
                 cartEntity.setCartTotalPrice(bookEntity.getBookPrice() * cartDTO.getQuantity());
                 return cartRepository.save(cartEntity);
@@ -133,4 +129,6 @@ public class CartServiceImpl implements ICartService{
         return cartRepository.findByUserId((int) userEntity.getUserId());
 
     }
+
+
 }

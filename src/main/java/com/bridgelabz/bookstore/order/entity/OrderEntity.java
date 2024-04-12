@@ -1,12 +1,14 @@
 package com.bridgelabz.bookstore.order.entity;
 
 import com.bridgelabz.bookstore.book.entity.BookEntity;
+import com.bridgelabz.bookstore.cart.entity.CartEntity;
 import com.bridgelabz.bookstore.order.dto.OrderDTO;
 import com.bridgelabz.bookstore.user.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 @Entity
 @NoArgsConstructor
@@ -24,21 +26,19 @@ public class OrderEntity {
 
     private String orderAddress;
     @JoinColumn(name = "user_Id")
-    @OneToOne
-    private UserEntity userEntity;
-    @JoinColumn(name = "book_Id")
     @ManyToOne
-    private BookEntity bookEntity;
-    private int quantity;
+    private UserEntity userEntity;
+
+    private int orderQuantity;
     private boolean cancel = false;
 
 
-    public OrderEntity(UserEntity userEntity, BookEntity bookEntity,int orderPrice, OrderDTO orderDto) {
-        this.userEntity = userEntity;
-        this.bookEntity = bookEntity;
-        this.orderDate = LocalDate.now();
-        this.quantity = orderDto.getQuantity();
-        this.orderAddress = orderDto.getAddress();
-        this.orderPrice = orderPrice;
-    }
+//    public OrderEntity(UserEntity userEntity,int orderPrice, OrderDTO orderDto) {
+//        this.userEntity = userEntity;
+//
+//        this.orderDate = LocalDate.now();
+//        this.quantity = orderDto.getQuantity();
+//        this.orderAddress = orderDto.getAddress();
+//        this.orderPrice = orderPrice;
+//    }
 }

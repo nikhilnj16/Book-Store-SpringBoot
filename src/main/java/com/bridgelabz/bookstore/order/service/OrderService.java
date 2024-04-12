@@ -9,10 +9,14 @@ import com.bridgelabz.bookstore.order.repository.IOrderRepository;
 import com.bridgelabz.bookstore.user.entity.UserEntity;
 import com.bridgelabz.bookstore.user.repository.IUserRepository;
 import com.bridgelabz.bookstore.user.utility.EmailSender;
+import com.bridgelabz.bookstore.user.utility.UserJwt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.w3c.dom.UserDataHandler;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -30,23 +34,32 @@ public class OrderService implements IOrderService {
     private IOrderRepository orderRepository;
     @Autowired
     private EmailSender emailSender;
+    @Autowired
+    private UserJwt userJwt;
 
 
     @Override
-    public OrderEntity placeOrder(int userId, OrderDTO orderDTO) {
-        UserEntity userEntity = userRepository.findById(userId).orElse(null);
-        BookEntity bookEntity = bookRepository.findById(orderDTO.getBookId()).orElse(null);
+    public OrderEntity placeOrder(@PathVariable String jwt,@RequestBody OrderDTO orderDTO) {
+        OrderEntity orderEntity = new OrderEntity();
+//        orderEntity.setOrderId(orderDTO.getOrderId());
+        orderEntity.setOrderDate(LocalDate.now());
+        orderEntity.setOrderPrice(orderDTO.getOrderPrice());
+        orderEntity.setOrderQuantity(orderDTO.getOrderQuantity());
+        orderEntity.setCancel(orderDTO.getOrderCancel());
+        orderEntity.setOrderAddress(orderDTO.getAddress());
+        String userFirstName = (userJwt.decodeToken(jwt));
+        System.out.println("userFirstName" + userFirstName);
+        UserEntity userEntity = userRepository.findByFirstName(userFirstName);
+//        UserEntity userEntity = userRepository.findById(orderDTO.getUserId()).orElse(null);
+        orderEntity.setUserEntity(userEntity);
 
         if(userEntity != null){
-            int orderPrice = bookEntity.getBookPrice() * orderDTO.getQuantity();
-            bookEntity.setQuantity(bookEntity.getQuantity()-orderDTO.getQuantity());
 
-            OrderEntity orderEntity = new OrderEntity(userEntity,bookEntity,orderPrice,orderDTO);
             orderRepository.save(orderEntity);
             emailSender.sendEmail(userEntity.getUserEmailId(), "Order placed successfully",
-                    "Book Name :" + orderEntity.getBookEntity().getBookName() +
-                    "\n" + "Book Price :" + orderEntity.getBookEntity().getBookPrice() +
-                    "\n" + "Order Quantity:" + orderDTO.getQuantity() + "Order Price:" + orderPrice);
+                    "Order Id: " + orderEntity.getOrderId() + "Order Price : "  + orderEntity.getOrderPrice() +
+                    "Order Quantity : " + orderEntity.getOrderQuantity()
+            );
             return orderEntity;
         };
         return null;
@@ -54,6 +67,7 @@ public class OrderService implements IOrderService {
 
     @Override
     public List<OrderEntity> getUserOrders(int userId) {
+
 //        UserEntity userEntity = userRepository.findById(userId).orElse(null);
 //
 //        if(userEntity != null){
@@ -72,7 +86,7 @@ public class OrderService implements IOrderService {
 
         orderEntity.setCancel(true);
         BookEntity bookEntity = bookRepository.findById(orderEntity.getOrderId()).orElse(null);
-        bookEntity.setQuantity(bookEntity.getQuantity()+ orderEntity.getQuantity());
+//        bookEntity.setQuantity(bookEntity.getQuantity()+ orderEntity.getQuantity());
         emailSender.sendEmail(userEntity.getUserEmailId(), "Order Cancelled", "Order Id " +
                         orderId + '\n' + orderEntity);
                 orderRepository.save(orderEntity);

@@ -22,7 +22,7 @@ public class UserEntity {
     @Valid
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int userId;
+    private long userId;
     @NotNull(message = "First name should not be null")
     @NotBlank(message = "name should not be blank")
     @Size(min = 2, max = 150, message = "First name must be between 2 and 150 characters")
