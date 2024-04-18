@@ -1,6 +1,7 @@
 package com.bridgelabz.bookstore.user.controller;
 
 
+import com.bridgelabz.bookstore.user.dto.ForgotPasswordDTO;
 import com.bridgelabz.bookstore.user.dto.NewPasswordDTO;
 import com.bridgelabz.bookstore.user.dto.ResetPasswordDTO;
 import com.bridgelabz.bookstore.user.utility.EmailSender;
@@ -47,8 +48,8 @@ public class UserController {
     }
 
     @PostMapping("/forgetPassword")
-    public String forgetPassword(@RequestHeader String email){
-        return service.forgetPassword(email);
+    public HashMap<String, String> forgetPassword(@RequestBody ForgotPasswordDTO forgotPasswordDTO){
+        return service.forgetPassword(forgotPasswordDTO);
     }
 
     @PostMapping("/newPassword")

@@ -1,6 +1,7 @@
 package com.bridgelabz.bookstore.user.services;
 
 
+import com.bridgelabz.bookstore.user.dto.ForgotPasswordDTO;
 import com.bridgelabz.bookstore.user.dto.NewPasswordDTO;
 import com.bridgelabz.bookstore.user.dto.ResetPasswordDTO;
 import com.bridgelabz.bookstore.user.entity.ForgetPassword;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 import java.time.Instant;
 import java.util.Date;
@@ -91,8 +93,8 @@ public class UserRegImpl implements IUserReg {
     }
 
     @Override
-    public String forgetPassword(@RequestBody String email){
-        UserEntity userEntity = repo.findByEmailId(email);
+    public HashMap<String, String> forgetPassword(@RequestBody ForgotPasswordDTO forgotPasswordDTO){
+        UserEntity userEntity = repo.findByEmailId(forgotPasswordDTO.getUserEmailId());
         int otp = otpGenerator();
         ForgetPassword fp = ForgetPassword.builder()
                 .otp(otp)
@@ -106,12 +108,15 @@ public class UserRegImpl implements IUserReg {
             String body = "No need to worry \n you can reset your book store application password by clicking the link : localhost:8085/user/resetPassword \n"
                  + "\n "  + otp +  " Use the token to reset password";
             String subject = "Reset your password";
-            emailSender.sendEmail(email, subject, body);
+            emailSender.sendEmail(forgotPasswordDTO.getUserEmailId(), subject, body);
 
             forgetPasswordRepository.save(fp);
-            return "Check yor mail to change password";
+
+            HashMap<String, String> response = new HashMap<>();
+            response.put("Status" , "OK");
+            return response;
         } else {
-            return "Invalid emailAddress";
+            return null;
         }
     }
     @Override

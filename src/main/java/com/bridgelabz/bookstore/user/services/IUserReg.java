@@ -1,6 +1,7 @@
 package com.bridgelabz.bookstore.user.services;
 
 
+import com.bridgelabz.bookstore.user.dto.ForgotPasswordDTO;
 import com.bridgelabz.bookstore.user.dto.ResetPasswordDTO;
 import com.bridgelabz.bookstore.user.dto.UserLoginDTO;
 import com.bridgelabz.bookstore.user.dto.NewPasswordDTO;
@@ -15,7 +16,7 @@ public interface IUserReg {
     HashMap<String, String> userLogin(UserLoginDTO userLoginDto);
 
     UserEntity getUser(String token);
-    String forgetPassword(@RequestBody String email);
+    HashMap<String, String> forgetPassword(@RequestBody ForgotPasswordDTO forgotPasswordDTO);
     String newPassword(@RequestBody NewPasswordDTO newPasswordDTO);
 
     String resetPassword(@RequestBody ResetPasswordDTO resetPasswordDTO);
